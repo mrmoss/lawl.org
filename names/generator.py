@@ -29,13 +29,22 @@ occupations=[
 	'JA']
 
 occupation_nums=[
-'MG',
-'HR',
-'AC',
-'JA',
-'SC',
-'IT'
-]
+	'MG',
+	'HR',
+	'AC',
+	'JA',
+	'SC',
+	'IT'
+	]
+
+occupation_longs=[
+	'Management',
+	'Human Resources',
+	'Accounting',
+	'Janitorial',
+	'Security',
+	'Information Technology'
+	]
 
 class employee_t:
 	def __init__(self,first,last):
@@ -44,9 +53,12 @@ class employee_t:
 		self.username=(first[0]+last).lower()
 		self.occupation=occupations[(ord(first[0])*ord(last[0]))%len(occupations)]
 		self.occupation_num=-1
+		real_index=-1
 		for oo in range(0,len(occupation_nums)):
 			if self.occupation==occupation_nums[oo]:
+				real_index=oo
 				self.occupation_num=(ord(occupation_nums[oo][0])+ord(occupation_nums[oo][1]))%99
+		self.occupation_long=occupation_longs[real_index]
 		id_hash=hashlib.md5(first+last).hexdigest()
 		self.id=22000000
 		for ii in id_hash:
@@ -71,7 +83,8 @@ try:
 			str(employees[ee].occupation)+delim+
 			employees[ee].first+delim+
 			employees[ee].last+delim+
-			employees[ee].username)
+			employees[ee].username+delim+
+			employees[ee].occupation_long)
 		counts[employees[ee].occupation]+=1
 	sys.stderr.write('Total='+str(len(employees))+'\n')
 	for cc in counts:

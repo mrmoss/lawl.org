@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import SimpleHTTPServer
 import BaseHTTPServer
+import json
 import re
 import sys
 import urllib
@@ -8,19 +9,33 @@ import urlparse
 
 database=[]
 
+def search_db(terms):
+	global database
+	found=[]
+	for ii in terms:
+		if len(ii)>3:
+			for jj in range(0,len(database)):
+				for kk in range(0,len(database[jj])):
+					check=database[jj][kk].lower()
+					if kk!=1 and ((kk!=0 and kk!=6 and ii in check) or (kk==0 and ii==check)):
+						found.append({
+						'First Name':database[jj][3],
+						'Last Name':database[jj][4],
+						'Email':database[jj][5]+'@lawl.org',
+						'Department':database[jj][6]})
+						break
+	json_obj=json.dumps(found)
+	return str(json_obj)
+
 class MyHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	def do_GET(self):
 		try:
 			global database
+			self.path='web/'+self.path
 			query_str=urlparse.urlparse(self.path).query
 
 			if len(query_str)==0:
-				file=open('web/index.html','r')
-				self.send_response(200)
-				self.send_header('Content-type','text/html')
-				self.end_headers()
-				self.wfile.write(file.read())
-				self.wfile.close()
+				return SimpleHTTPServer.SimpleHTTPRequestHandler.do_GET(self)
 			else:
 				for query in query_str.split('&'):
 					query=query.split('=')
@@ -28,16 +43,8 @@ class MyHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 						key=query[0]
 						val=urllib.unquote(query[1])
 						if key=='search':
-							found=[]
 							val=re.sub('[^0-9a-zA-Z]+',' ',val).lower().split(' ')
-
-							for ii in val:
-								if len(ii)>3:
-									for jj in range(0,len(database)):
-										for kk in range(0,len(database[jj])):
-											if kk!=1 and ii in database[jj][kk].lower():
-												found.append(database[jj][2:])
-												break
+							found=search_db(val)
 							self.send_response(200)
 							self.send_header('Content-type','text/html')
 							self.end_headers()
@@ -52,7 +59,7 @@ try:
 	for line in file:
 		line=line.strip()
 		line=line.split(',')
-		if len(line)==6:
+		if len(line)==7:
 			database.append(line)
 	Handler=MyHandler
 	server=BaseHTTPServer.HTTPServer(('127.0.0.1',8080),MyHandler)
