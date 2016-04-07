@@ -83,13 +83,13 @@
 			{
 				xml("search="+query,function(response)
 				{
-					response_box.innerHTML="";
+					response_box.innerHTML="<br>";
 					var json=JSON.parse(response);
 					for(var key in json)
 					{
 						var line="";
 						for(var ii in json[key])
-							line+=json[key][ii]+" ";
+							line+="<b>"+ii+"</b>: "+json[key][ii]+"<br>";
 						response_box.innerHTML+=line+"<br>";
 					}
 				});
