@@ -19,11 +19,11 @@ def search_db(terms):
 					check=database[jj][kk].lower()
 					if kk!=1 and ((kk!=0 and kk!=6 and ii in check) or (kk==0 and ii==check)):
 						found.append({
-						'Full Name':database[jj][3]+" "+database[jj][4],
-						'First Name':database[jj][3],
-						'Last Name':database[jj][4],
-						'Email':database[jj][5]+'@lawl.org',
-						'Department':database[jj][6]})
+						'0Full Name':database[jj][3]+" "+database[jj][4],
+						'1First Name':database[jj][3],
+						'2Last Name':database[jj][4],
+						'3Email':database[jj][5]+'@lawl.org',
+						'4Department':database[jj][6]})
 						break
 	json_obj=json.dumps(found)
 	return str(json_obj)

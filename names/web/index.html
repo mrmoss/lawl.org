@@ -88,10 +88,14 @@
 					var json=JSON.parse(response);
 					for(var key in json)
 					{
-						var line="";
+						var lines=[];
 						for(var ii in json[key])
-							line+="<b>"+ii+"</b>: "+json[key][ii]+"<br>";
-						response_box.innerHTML+=line+"<br>";
+							lines.push(ii+"</b>: "+json[key][ii]+"<br>");
+						lines.sort();
+						for(var ii in lines)
+							if(lines.length>0)
+								response_box.innerHTML+="<b>"+lines[ii].substr(1,lines[ii].length);
+						response_box.innerHTML+="<br>";
 						printed=true;
 					}
 					if(!printed)
