@@ -84,6 +84,7 @@
 				xml("search="+query,function(response)
 				{
 					response_box.innerHTML="<br>";
+					var printed=false;
 					var json=JSON.parse(response);
 					for(var key in json)
 					{
@@ -91,7 +92,10 @@
 						for(var ii in json[key])
 							line+="<b>"+ii+"</b>: "+json[key][ii]+"<br>";
 						response_box.innerHTML+=line+"<br>";
+						printed=true;
 					}
+					if(!printed)
+						response_box.innerHTML="<br>No results found.<br>";
 				});
 			}
 
