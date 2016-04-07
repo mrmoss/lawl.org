@@ -133,7 +133,7 @@ class employee_t:
 		arr.append(self.username.lower())
 		return arr
 
-def search(database,terms):
+def search(database,terms,ordered=False):
 	results=[]
 	for term in terms:
 		if len(term)>3:
@@ -141,7 +141,7 @@ def search(database,terms):
 				values=employee.arr()
 				for ii in range(len(values)):
 					if (ii<2 and term in values[ii]) or term==values[ii]:
-						results.append(employee.json(False,True))
+						results.append(employee.json(False,ordered))
 						break
 	return str(json.dumps(results))
 

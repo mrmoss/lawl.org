@@ -29,7 +29,7 @@ class MyHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 							self.send_response(200)
 							self.send_header('Content-type','text/html')
 							self.end_headers()
-							self.wfile.write(str(employees.search(database,val)))
+							self.wfile.write(str(employees.search(database,val,True)))
 							self.wfile.close()
 		except Exception as error:
 			self.send_response(400)
