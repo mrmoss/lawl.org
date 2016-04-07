@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import hashlib
+import sys
 
 occupations=[
 	'HR',
@@ -40,6 +41,7 @@ class employee_t:
 	def __init__(self,first,last):
 		self.first=first
 		self.last=last
+		self.username=(first[0]+last).lower()
 		self.occupation=occupations[(ord(first[0])*ord(last[0]))%len(occupations)]
 		self.occupation_num=-1
 		for oo in range(0,len(occupation_nums)):
@@ -53,9 +55,10 @@ class employee_t:
 try:
 	employees={}
 	counts={}
+	delim=','
 	for oo in occupations:
 		counts[oo]=0
-	file=open('names.txt','r')
+	file=open('names_in.txt','r')
 	for line in file:
 		line=line.strip()
 		line=line.split();
@@ -63,12 +66,17 @@ try:
 			employee=employee_t(line[0],line[1])
 			employees[employee.id]=employee
 	for ee in employees:
-		print(str(employees[ee].id)+' '+str(employees[ee].occupation)+' 0'+str(employees[ee].occupation_num)+' '+employees[ee].first+' '+employees[ee].last)
+		print(str(employees[ee].id)+delim+
+			str(employees[ee].occupation)+delim+
+			str(employees[ee].occupation_num)+delim+
+			employees[ee].first+delim+
+			employees[ee].last+delim+
+			employees[ee].username)
 		counts[employees[ee].occupation]+=1
-	print('Total='+str(len(employees)))
+	sys.stderr.write('Total='+str(len(employees))+'\n')
 	for cc in counts:
-		print(cc+'='+str(counts[cc]))
+		sys.stderr.write(cc+'='+str(counts[cc])+'\n')
 	exit(0)
 except Exception as error:
-	print(error)
+	sys.stderr.write(str(error)+'\n')
 	exit(1)
