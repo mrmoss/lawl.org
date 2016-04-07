@@ -46,7 +46,7 @@ class employee_t:
 		self.occupation_num=-1
 		for oo in range(0,len(occupation_nums)):
 			if self.occupation==occupation_nums[oo]:
-				self.occupation_num=oo
+				self.occupation_num=(ord(occupation_nums[oo][0])+ord(occupation_nums[oo][1]))%99
 		id_hash=hashlib.md5(first+last).hexdigest()
 		self.id=22000000
 		for ii in id_hash:
@@ -67,8 +67,8 @@ try:
 			employees[employee.id]=employee
 	for ee in employees:
 		print(str(employees[ee].id)+delim+
-			str(employees[ee].occupation)+delim+
 			str(employees[ee].occupation_num)+delim+
+			str(employees[ee].occupation)+delim+
 			employees[ee].first+delim+
 			employees[ee].last+delim+
 			employees[ee].username)
