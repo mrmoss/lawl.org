@@ -36,7 +36,7 @@ class MyHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 									for jj in range(0,len(database)):
 										for kk in range(0,len(database[jj])):
 											if kk!=1 and ii in database[jj][kk].lower():
-												found.append(database[jj][3:])
+												found.append(database[jj][2:])
 												break
 							self.send_response(200)
 							self.send_header('Content-type','text/html')
