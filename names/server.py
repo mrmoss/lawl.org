@@ -1,32 +1,13 @@
 #!/usr/bin/env python
 import SimpleHTTPServer
 import BaseHTTPServer
-import json
+import employees
 import re
 import sys
 import urllib
 import urlparse
 
 database=[]
-
-def search_db(terms):
-	global database
-	found=[]
-	for ii in terms:
-		if len(ii)>3:
-			for jj in range(0,len(database)):
-				for kk in range(0,len(database[jj])):
-					check=database[jj][kk].lower()
-					if kk!=1 and ((kk!=0 and kk!=6 and ii in check) or (kk==0 and ii==check)):
-						found.append({
-						'0Full Name':database[jj][3]+" "+database[jj][4],
-						'1First Name':database[jj][3],
-						'2Last Name':database[jj][4],
-						'3Email':database[jj][5]+'@lawl.org',
-						'4Department':database[jj][6]})
-						break
-	json_obj=json.dumps(found)
-	return str(json_obj)
 
 class MyHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	def do_GET(self):
@@ -45,26 +26,24 @@ class MyHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 						val=urllib.unquote(query[1])
 						if key=='search':
 							val=re.sub('[^0-9a-zA-Z]+',' ',val).lower().split(' ')
-							found=search_db(val)
 							self.send_response(200)
 							self.send_header('Content-type','text/html')
 							self.end_headers()
-							self.wfile.write(str(found))
+							self.wfile.write(str(employees.search(database,val)))
 							self.wfile.close()
 		except Exception as error:
+			self.send_response(400)
+			self.end_headers()
+			self.wfile.close()
 			sys.stderr.write(str(error)+'\n')
 			pass
 
-try:
-	file=open('names_out.txt','r')
-	for line in file:
-		line=line.strip()
-		line=line.split(',')
-		if len(line)==7:
-			database.append(line)
-	Handler=MyHandler
-	server=BaseHTTPServer.HTTPServer(('127.0.0.1',8080),MyHandler)
-	server.serve_forever()
-except Exception as error:
-	sys.stderr.write(str(error)+'\n')
-	exit(1)
+if __name__=="__main__":
+	try:
+		database=employees.load_from_csv('names.csv')
+		Handler=MyHandler
+		server=BaseHTTPServer.HTTPServer(('0.0.0.0',8081),MyHandler)
+		server.serve_forever()
+	except Exception as error:
+		sys.stderr.write(str(error)+'\n')
+		exit(1)
