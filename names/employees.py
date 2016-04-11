@@ -10,32 +10,6 @@ departments=[
 	('SC',51,'Security'),
 	('IT',58,'Information Technology')]
 
-departments_gen=[
-	'HR',
-	'AC',
-	'MG',
-	'HR',
-	'AC',
-	'MG',
-	'HR',
-	'AC',
-	'MG',
-	'HR',
-	'AC',
-	'MG',
-	'HR',
-	'AC',
-	'MG',
-	'HR',
-	'AC',
-	'MG',
-	'HR',
-	'HR',
-	'HR',
-	'SC',
-	'IT',
-	'JA']
-
 class department_t:
 	def __init__(self,data=None):
 		global departments
@@ -63,20 +37,11 @@ class department_t:
 					self.name=department[2]
 
 class employee_t:
-	def __init__(self,first=None,last=None,random=None):
+	def __init__(self,first=None,last=None):
 		if first!=None and last!=None:
 			self.first=first
 			self.last=last
 			self.username=(self.first[0]+self.last).lower()
-
-			if random:
-				global departments
-				self.department=departments_gen[(ord(self.first[0])*ord(self.last[0]))%len(departments_gen)]
-				self.department=department_t(self.department)
-				id_hash=hashlib.md5(first+last).hexdigest()
-				self.id=22000000
-				for ii in id_hash:
-					self.id+=int(ii,16)**4
 
 	def json(self,authorized=False,ordered=False):
 		obj={}
