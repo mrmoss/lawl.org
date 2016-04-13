@@ -76,6 +76,7 @@ class employee_t:
 			obj[str(prefix)+'Department Initials']=self.department.initials
 			if ordered:
 				prefix+=1
+			obj[str(prefix)+'Issue Number']=self.issue
 		return obj
 
 	def csv(self,authorized=False):
@@ -83,7 +84,8 @@ class employee_t:
 		delim=','
 		csv+=str(self.id)+delim
 		csv+=str(self.department.number)+delim
-		csv+=str(self.department.initials)+delim
+		csv+=self.department.initials+delim
+		csv+=str(self.issue)+delim
 		csv+=self.first+delim
 		csv+=self.last+delim
 		csv+=self.username+delim
@@ -98,7 +100,7 @@ class employee_t:
 		arr.append(self.username.lower())
 		return arr
 
-def search(database,terms,ordered=False):
+def search(database,terms,authorized=False,ordered=False):
 	results=[]
 	for term in terms:
 		if len(term)>3:
@@ -106,7 +108,7 @@ def search(database,terms,ordered=False):
 				values=employee.arr()
 				for ii in range(len(values)):
 					if (ii<2 and term in values[ii]) or term==values[ii]:
-						results.append(employee.json(False,ordered))
+						results.append(employee.json(authorized,ordered))
 						break
 	return str(json.dumps(results))
 
@@ -127,15 +129,22 @@ def load_from_csv(filename):
 	for line in file:
 		line=line.strip()
 		line=line.split(',')
-		if len(line)==7:
+		if len(line)==8:
 			employee=employee_t()
 			employee.id=line[0]
 			employee.department=department_t()
-			employee.department.number=line[1]
+			employee.department.number=zero_padded_int(line[1])
 			employee.department.initials=line[2]
-			employee.first=line[3]
-			employee.last=line[4]
-			employee.username=line[5]
-			employee.department.name=line[6]
+			employee.issue=zero_padded_int(line[3])
+			employee.first=line[4]
+			employee.last=line[5]
+			employee.username=line[6]
+			employee.department.name=line[7]
 			database.append(employee)
 	return database
+
+def zero_padded_int(string):
+	ii=str(string).strip().lstrip('0')
+	if len(ii)==0:
+		ii='0'
+	return int(ii)
