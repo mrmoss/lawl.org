@@ -11,7 +11,7 @@ def authorize(department,id,issue):
 	lookup=json.loads(lookup)
 	if len(lookup)>0:
 		lookup=lookup[0]
-		if lookup['Department Number']==department and lookup['ID']==id and lookup['Issue Number']<=issue:
+		if lookup['Department Number']==department and lookup['ID']==id:# and lookup['Issue Number']<=issue:
 			print('Welcome '+lookup['Full Name']+'!')
 			return True
 	return False
