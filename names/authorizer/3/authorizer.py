@@ -7,7 +7,7 @@ import urllib2
 database=[]
 index=3
 
-def authorize(department,id,issue):
+def authorize(department,id,issue,flag_id):
 	global database
 	lookup=employees.search(database,[id],True)
 	lookup=json.loads(lookup)
@@ -16,7 +16,7 @@ def authorize(department,id,issue):
 		if department==49:
 			print('Welcome '+lookup['Full Name']+'!')
 			try:
-				urllib2.urlopen('http://127.0.0.1:8081/?flag='+id+str(index)).read()
+				urllib2.urlopen('http://127.0.0.1:8081/?flag='+flag_id+str(index)).read()
 			except:
 				pass
 			return True
@@ -26,7 +26,15 @@ if __name__=="__main__":
 	try:
 		database=employees.load_from_csv('names.csv')
 		while True:
+			print('Enter the ID of the flag you want to get credit through:')
+			flag_id=''
+			while True:
+				ch=sys.stdin.read(1)
+				if ch=='\n':
+					break
+				flag_id+=ch
 			line=''
+			print('Scan your card: ')
 			while True:
 				ch=sys.stdin.read(1)
 				if ch=='\n':
@@ -38,7 +46,7 @@ if __name__=="__main__":
 					department=employees.zero_padded_int(line[:2])
 					id=line[2:-2]
 					issue=employees.zero_padded_int(line[-2:])
-					authorize(department,id,issue)
+					authorize(department,id,issue,flag_id)
 				except Exception as error:
 					sys.stderr.write(str(error)+'\n')
 	except Exception as error:
