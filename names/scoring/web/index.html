@@ -124,13 +124,21 @@
 						div_data+="<br>";
 
 						if(scenarios.length==player.flags.length)
-							for(var ii in scenarios)
+							for(var ii=0;ii<scenarios.length;++ii)
 							{
+								var stop=false;
 								if(player.flags[ii]=='1')
+								{
 									div_data+='<div class="alert alert-success" role="alert">';
+								}
 								else
-									div_data+='<div class="alert alert-info" role="alert">';
+								{
+									div_data+='<div class="alert alert-danger" role="alert">';
+									stop=true;
+								}
 								div_data+=scenarios[ii]+"</div>";
+								if(stop)
+									break;
 							}
 
 						main_div.innerHTML=div_data;
