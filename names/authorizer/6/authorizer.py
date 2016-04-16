@@ -3,6 +3,8 @@ import employees
 import json
 import sys
 import urllib2
+import pygame
+import time
 
 database=[]
 index=6
@@ -16,13 +18,20 @@ def authorize(department,id,issue,flag_id):
 		if lookup['Department Number']==department and lookup['ID']==id and id=='223189' and lookup['Issue Number']<=issue:
 			print('Welcome '+lookup['Full Name']+'!')
 			try:
-				urllib2.urlopen('http://127.0.0.1:8081/?flag='+flag_id+str(index)).read()
+				urllib2.urlopen('http://scoring.csc.uaf.edu/?flag='+flag_id+str(index)).read()
+				pygame.mixer.music.load("../sounds/granted.mp3")
+				pygame.mixer.music.play()
+				time.sleep(2)
 			except:
 				pass
 			return True
+	pygame.mixer.music.load("../sounds/denied.mp3")
+	pygame.mixer.music.play()
+	time.sleep(2)
 	return False
 
 if __name__=="__main__":
+	pygame.init()
 	try:
 		database=employees.load_from_csv('names.csv')
 		while True:
