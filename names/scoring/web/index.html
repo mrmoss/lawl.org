@@ -46,21 +46,12 @@
 			<div class="row">
 				<div class="col-sm-3">
 				</div>
-				<div class="col-sm-6">
+				<div id="main_div" class="col-sm-6">
 					<p class="lead">Type in your query below.</p>
 					<input id="query_box" class="form-control" type="text"/>
+					<div id="error_div"></div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-sm-3">
-				</div>
-				<div class="col-sm-6">
-					<div id="response_box">
-					</div>
-				</div>
-			</div>
-			<br>
-			<!--<center><a href='departments.txt'>Departments</a></center>-->
 		  </div>
 		</div>
 		<script src="js/jquery.min.js"></script>
@@ -68,40 +59,87 @@
 		<script src="js/bootstrap.min.js"></script>
 		<script src="js/ie10-viewport-bug-workaround.js"></script>
 		<script>
+			var title="We just found an ID card in the parking lot of the Attackistan branch of Lawl.org.";
+			var scenarios=
+			[
+				"Let's take baby steps, first step, run your reader and make sure the ID on the card matches the number on the back.",
+				"Baby step two, run the card on the Find Me card reader. Make sure the name it shows matches your card.",
+				"Your card has been reported missing! Figure out how to make it work to get into the front door!",
+				"The card reader in the Management Lounge will let anyone that's part of the Management Department in. They have the best donuts in the morning! Get into the Management Lounge!",
+				"Now that we're full on donuts, let's head over to the IT department and grab a cubicle. Anyone in the IT department should let you in.",
+				"The Management department did a donut count, and their on to you! Go get a disquise from the Janitorial closet before someone catches you with donut residue! Any valid janitor card should get you in!",
+				"Espionage time! Get a listing of the clients from the Accounting department. The head of Accounting is Marcelina Stancill, she's the only one with access to the accounting room.",
+				"Ok, time for one more task before we make our escape. The CEO of the Attackistan branch of Lawl.org is Cornell Popovich. He's known to keep his password on a yellow sticky in his office. He's also the only one with access to his office. We've killed the cameras, go get that password!"
+			];
+			var player={};
+			var regex=new RegExp('[?&]id(=([^&#]*)|&|#|$)','i');
+			regex=regex.exec(window.location.href);
+			if(regex&&regex.length>2&&regex[2])
+				player.id=regex[2];
+
+			var main_div=document.getElementById("main_div");
+			var error_div=document.getElementById("error_div");
 			var query_box=document.getElementById("query_box");
-			var response_box=document.getElementById("response_box");
 			query_box.focus();
 
 			query_box.addEventListener('keypress',function(e)
 			{
 				if((e.which||e.keyCode)===13)
 				{
-					search(this.value);
+					player.search2(this.value);
 					this.value="";
 				}
 			});
 
-			function search(query)
+			if(player.id)
+				search2(player.id);
+
+			function search2(query)
 			{
+				var is_an_id=query.length==6;
+
+				if(is_an_id)
+					for(var ii in query)
+					{
+						if(ii<'0'||ii>'9')
+						{
+							is_an_id=false;
+							break;
+						}
+					}
+
 				xml("search="+query,function(response)
 				{
-					response_box.innerHTML="<br>";
 					var printed=false;
 					var json=JSON.parse(response);
 					for(var key in json)
 					{
-						var lines=[];
-						for(var ii in json[key])
-							lines.push(ii+"</b>: "+json[key][ii]+"<br>");
-						lines.sort();
-						for(var ii in lines)
-							if(lines.length>0)
-								response_box.innerHTML+="<b>"+lines[ii].substr(1,lines[ii].length);
-						response_box.innerHTML+="<br>";
 						printed=true;
+						var div_data="<br>";
+						player.name=json[key]['0Full Name'];
+						player.id=query;
+						player.flags=json[key]['flags'];
+						div_data+=player.name+"<br>";
+						div_data+=player.id+"<br>";
+						div_data+="<br>";
+
+						if(scenarios.length==player.flags.length)
+							for(var ii in scenarios)
+							{
+								if(player.flags[ii]=='1')
+									div_data+='<div class="alert alert-success" role="alert">';
+								else
+									div_data+='<div class="alert alert-info" role="alert">';
+								div_data+=scenarios[ii]+"</div>";
+							}
+
+						main_div.innerHTML=div_data;
+
+						if(!player.interval)
+							player.interval=setInterval(function(){search2(player.id);},1000);
 					}
-					if(!printed)
-						response_box.innerHTML="<br>No results found.<br>";
+					if(!printed&&error_div)
+						error_div.innerHTML="<br>This is not a valid id.<br>";
 				});
 			}
 
