@@ -2,8 +2,10 @@
 import employees
 import json
 import sys
+import urllib2
 
 database=[]
+index=0
 
 def authorize(department,id,issue):
 	global database
@@ -13,6 +15,10 @@ def authorize(department,id,issue):
 		lookup=lookup[0]
 		if lookup['Department Number']==department and lookup['ID']==id:# and lookup['Issue Number']<=issue:
 			print('Welcome '+lookup['Full Name']+'!')
+			try:
+				urllib2.urlopen('http://127.0.0.1:8081/?flag='+id+str(index)).read()
+			except:
+				pass
 			return True
 	return False
 
