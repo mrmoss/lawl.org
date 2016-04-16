@@ -126,25 +126,30 @@
 
 						if(scenarios.length==player.flags.length)
 						{
+							var count=0;
 							var stop=false;
 
 							for(var ii=0;ii<scenarios.length;++ii)
 							{
+								var print=false;
 								if(player.flags[ii]=='1')
 								{
+									print=true;
 									div_data+='<div class="alert alert-success" role="alert">';
+									++count;
 								}
-								else
+								else if(!stop)
 								{
-									div_data+='<div class="alert alert-danger" role="alert">';
+									print=true;
 									stop=true;
+									div_data+='<div class="alert alert-info" role="alert">';
 								}
-								div_data+=scenarios[ii]+"</div>";
-								if(stop)
-									break;
+
+								if(print)
+									div_data+=scenarios[ii]+"</div>";
 							}
 
-							if(!stop)
+							if(count==player.flags.length)
 							 div_data+='Mission Complete!';
 						}
 
