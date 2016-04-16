@@ -86,7 +86,7 @@
 			{
 				if((e.which||e.keyCode)===13)
 				{
-					player.search2(this.value);
+					search2(this.value);
 					this.value="";
 				}
 			});
@@ -118,15 +118,18 @@
 						var div_data="<br>";
 						player.name=json[key]['0Full Name'];
 						player.id=query;
+						var old_flags=player.flags;
 						player.flags=json[key]['flags'];
 						div_data+=player.name+"<br>";
 						div_data+=player.id+"<br>";
 						div_data+="<br>";
 
 						if(scenarios.length==player.flags.length)
+						{
+							var stop=false;
+
 							for(var ii=0;ii<scenarios.length;++ii)
 							{
-								var stop=false;
 								if(player.flags[ii]=='1')
 								{
 									div_data+='<div class="alert alert-success" role="alert">';
@@ -141,7 +144,14 @@
 									break;
 							}
 
+							if(!stop)
+							 div_data+='Mission Complete!';
+						}
+
 						main_div.innerHTML=div_data;
+
+						if(player.flags!=old_flags)
+							window.scrollTo(0,document.body.scrollHeight);
 
 						if(!player.interval)
 							player.interval=setInterval(function(){search2(player.id);},1000);
