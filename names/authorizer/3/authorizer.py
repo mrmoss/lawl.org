@@ -6,11 +6,14 @@ import urllib2
 import pygame
 import time
 
+scoring_host='scoring.csc.uaf.edu'
+#scoring_host='127.0.0.1:8081'
 database=[]
 index=3
 
 def authorize(department,id,issue,flag_id):
 	global database
+	global scoring_host
 	lookup=employees.search(database,[id],True)
 	lookup=json.loads(lookup)
 	if len(lookup)>0:
@@ -18,7 +21,7 @@ def authorize(department,id,issue,flag_id):
 		if department==49:
 			print('Welcome '+lookup['Full Name']+'!')
 			try:
-				urllib2.urlopen('http://scoring.csc.uaf.edu/?flag='+flag_id+str(index)).read()
+				urllib2.urlopen('http://'+scoring_host+'/?flag='+flag_id+str(index)).read()
 				pygame.mixer.music.load("../sounds/granted.mp3")
 				pygame.mixer.music.play()
 				time.sleep(2)

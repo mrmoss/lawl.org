@@ -8,8 +8,28 @@ import sys
 import urllib
 import urlparse
 
+flag_db_filename='db.bak'
 database=[]
 flag_db={}
+
+def load_flag_db():
+	global flag_db_filename
+	global flag_db
+	try:
+		flag_db_file=open(flag_db_filename,'r')
+		flag_db=json.loads(flag_db_file.read())
+		flag_db_file.close()
+	except:
+		pass
+
+def save_flag_db():
+	try:
+		flag_db_file=open(flag_db_filename,'w')
+		flag_db_temp=json.dumps(flag_db)
+		flag_db_file.write(flag_db_temp)
+		flag_db_file.close()
+	except:
+		pass
 
 class MyHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 	def do_GET(self):
@@ -55,6 +75,7 @@ class MyHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 									if not id in flag_db:
 										flag_db[id]='00000000'
 									flag_db[id]=flag_db[id][:num]+'1'+flag_db[id][num+1:]
+									save_flag_db()
 							self.send_response(200)
 							self.send_header('Content-type','text/html')
 							self.end_headers()
@@ -69,6 +90,7 @@ class MyHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
 
 if __name__=="__main__":
 	try:
+		load_flag_db()
 		database=employees.load_from_csv('names.csv')
 		Handler=MyHandler
 		server=BaseHTTPServer.HTTPServer(('0.0.0.0',8081),MyHandler)
