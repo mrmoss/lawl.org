@@ -6,8 +6,8 @@ import urllib2
 import pygame
 import time
 
-scoring_host='scoring.csc.uaf.edu'
-#scoring_host='127.0.0.1:8081'
+#scoring_host='scoring.csc.uaf.edu'
+scoring_host='127.0.0.1:8081'
 database=[]
 index=0
 

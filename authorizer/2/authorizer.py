@@ -6,8 +6,8 @@ import urllib2
 import pygame
 import time
 
-scoring_host='scoring.csc.uaf.edu'
-#scoring_host='127.0.0.1:8081'
+#scoring_host='scoring.csc.uaf.edu'
+scoring_host='127.0.0.1:8081'
 database=[]
 index=2
 
@@ -22,14 +22,14 @@ def authorize(department,id,issue):
 			print('Welcome '+lookup['Full Name']+'!')
 			try:
 				urllib2.urlopen('http://'+scoring_host+'/?flag='+id+str(index)).read()
-				pygame.mixer.music.load("../sounds/granted.mp3")
-				pygame.mixer.music.play()
+#				pygame.mixer.music.load("../sounds/granted.mp3")
+#				pygame.mixer.music.play()
 				time.sleep(2)
 			except:
 				pass
 			return True
-	pygame.mixer.music.load("../sounds/denied.mp3")
-	pygame.mixer.music.play()
+#	pygame.mixer.music.load("../sounds/denied.mp3")
+#	pygame.mixer.music.play()
 	time.sleep(2)
 	return False
 
