@@ -25,7 +25,7 @@ def authorize(department,id,issue,flag_id):
 				pygame.mixer.music.load("../sounds/granted.mp3")
 				pygame.mixer.music.play()
 				time.sleep(2)
-			except:
+			except Exception:
 				pass
 			return True
 	pygame.mixer.music.load("../sounds/denied.mp3")
