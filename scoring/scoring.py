@@ -19,7 +19,7 @@ def load_flag_db():
 		flag_db_file=open(flag_db_filename,'r')
 		flag_db=json.loads(flag_db_file.read())
 		flag_db_file.close()
-	except:
+	except Exception:
 		pass
 
 def save_flag_db():
@@ -28,7 +28,7 @@ def save_flag_db():
 		flag_db_temp=json.dumps(flag_db)
 		flag_db_file.write(flag_db_temp)
 		flag_db_file.close()
-	except:
+	except Exception:
 		pass
 
 class MyHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
